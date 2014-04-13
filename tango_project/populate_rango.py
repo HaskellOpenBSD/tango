@@ -23,7 +23,7 @@ def populate():
 
 	add_page(cat=django_cat,
 		title='Django Rocks',
-		url='http://www.djangoracks.com/')
+		url='http://www.djangorocks.com/')
 
 	add_page(cat=django_cat,
 		title='How to Tango with Django',

@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 
-{% load static %} <! -- New line -->
-
 <html>
 
 	<head>
@@ -9,10 +7,19 @@
 	</head>
 
 	<body>
-		<h1>Rango says...</h1>
-		hello world! <strong>{{ boldmessage }}</strong><br />
-		<a href="/rango/about/">About</a><br />
-		<img src="{% static "rango.jpg" %}" alt="Rango picture" /> <!-- New line -->
-	</body>
+		<h1>Rango says...hello world!</h1>
+		
+		{% if categories %}
+			<ul>
+				{% for category in categories %}
+				<!-- Following line changed to add an HTML hyperlink-->
+				<li><a href="/rango/category/{{ category.url }}">{{ category.name }}</a></li>
+				{% endfor %}
+			<ul>
+		{% else %}
+			<strong>There are no categories present.</strong>
+		{% endif %}
 
+		<p><a href="/rango/about/">About</a></p>
+	</body>
 </html>
