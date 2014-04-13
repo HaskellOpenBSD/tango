@@ -7,14 +7,20 @@ def index(request):
 	# Obtain the context from the HTTP request.
 	context = RequestContext(request)
 
+	context_dict = {}
+
 	# Query for categories - add the list to our context dictionary.
 	category_list = Category.objects.order_by('-likes')[:5]
-	context_dict = {'categories': category_list}	
+	context_dict['categories'] = category_list	
 
 	# Loop through each category returned, and create a URL attribute.
 	# Stores an encoded URL (spaces replaced with underscores).
 	for category in category_list:	
 		category.url = category.name.replace(' ', '_')
+
+	# Query for pages - add the list to our context dictionary.
+	page_list = Page.objects.order_by('-views')[:5]
+	context_dict['pages'] = page_list
 
 	# Render the response and send it back
 	return render_to_response('rango/index.html', context_dict, 
