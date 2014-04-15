@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Category(models.Model):
 	name = models.CharField(max_length=128, unique=True)
@@ -16,3 +17,15 @@ class Page(models.Model):
 
 	def __str__(self):
 		return self.title
+
+class UserProfile(models.Model):
+	# Required -- links UserProfile to a User model instance.
+	user = models.OneToOneField(User)
+
+	# Additional attributes
+	website = models.URLField(blank=True)
+	picture = models.ImageField(upload_to='profile_images', blank=True)
+
+	# Override __str__() to return something meaningful
+	def __str__(self):
+		return self.user.username
