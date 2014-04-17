@@ -39,6 +39,9 @@ MEDIA_URL = '/media/'
 # Absolute path to the media directory
 MEDIA_ROOT = os.path.join(PROJECT_PATH, 'media')
 
+# Redirect non-logged-in users when they try to access restricted pages
+LOGIN_URL = '/rango/login/'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
