@@ -38,7 +38,8 @@ def index(request):
 		context)
 
 def about(request):
-	return render_to_response('rango/about.html') 
+	context = RequestContext(request)
+	return render_to_response('rango/about.html', context) 
 
 def category(request, category_name_url):
 	# Request our context from the request passed to us.
@@ -268,7 +269,9 @@ def user_login(request):
 
 @login_required
 def restricted(request):
-	return HttpResponse('Since you\'re logged in you can see this.')
+	context = RequestContext(request)
+	return render_to_response('rango/restricted.html', context)
+	#return HttpResponse('Since you\'re logged in you can see this.')
 
 # Use the login_required() decorator to ensure only those logged in
 # can access the view.

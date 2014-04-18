@@ -42,7 +42,8 @@ def populate():
 	# Print out what we have added to the user.
 	for c in Category.objects.all():
 		for p in Page.objects.filter(category=c):
-			print("- {0} - {1}".format(str(c), str(p)))
+			print("- {0} - {1} - {2} - {3}".format(str(c), str(p), 
+				c.views, c.likes))
 
 def add_page(cat, title, url, views=0):
 	p = Page.objects.get_or_create(category=cat, title=title, url=url,
