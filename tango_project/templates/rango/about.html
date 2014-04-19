@@ -9,6 +9,14 @@
 	<h1>Rango says...</h1>
 	This is the about page. <br />
 	Here's a photo of the crossroads: <br />
-	<img src="{% static "crossroads2.jpg" %}" alt="Crossroads image" />
+	<img src="{% static "crossroads2.jpg" %}" alt="Crossroads image" /><br />
+
+	{% if visits > 1 %}
+	You have visited this site {{ visits }} times.<br />
+	Your last visit was on {{ last_visit }}. <br />
+	{% else %}
+	This is the first time you've visited this site. <br />
+	<strong>Welcome!</strong><br />
+	{% endif %}
 
 {% endblock %}

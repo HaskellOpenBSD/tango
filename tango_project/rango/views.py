@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.template import RequestContext
 from django.shortcuts import render
 from django.shortcuts import render_to_response
@@ -18,11 +19,9 @@ def index(request):
 	# Obtain the context from the HTTP request.
 	context = RequestContext(request)
 
-	context_dict = {}
-
 	# Query for categories - add the list to our context dictionary.
 	category_list = Category.objects.order_by('-likes')[:5]
-	context_dict['categories'] = category_list	
+	context_dict = {'categories': category_list}
 
 	# Loop through each category returned, and create a URL attribute.
 	# Stores an encoded URL (spaces replaced with underscores).
@@ -33,13 +32,50 @@ def index(request):
 	page_list = Page.objects.order_by('-views')[:5]
 	context_dict['pages'] = page_list
 
-	# Render the response and send it back
-	return render_to_response('rango/index.html', context_dict, 
+	# Obtain our Response object early so we can add cookie info.
+	response = render_to_response('rango/index.html', context_dict, 
+		context)
+
+	if request.session.get('last_visit'):
+		# The session has a value for the last visit
+		last_visit_time = request.session.get('last_visit')
+		visits = request.session.get('visits', 0)
+
+		if (datetime.now() - datetime.strptime(last_visit_time[:-7],
+			'%Y-%m-%d %H:%M:%S')).seconds > 0:
+			request.session['visits'] = visits + 1
+			request.session['last_visit'] = str(datetime.now())
+	else:
+		# The get returns None, and the session does not have a value
+		# for the last visit.
+		request.session['last_visit'] = str(datetime.now())
+		request.session['visits'] = 1
+
+	# Render and return the rendered response back to the user.
+	return render_to_response('rango/index.html', context_dict,
 		context)
 
 def about(request):
 	context = RequestContext(request)
-	return render_to_response('rango/about.html', context) 
+	context_dict = {}
+
+	# If session cookies exist, update the context_dict.
+	# The context_dict will be passed to the template to show the
+	# user the number of times they've visited the site (on separate
+	# days) and the last time they visited.
+	if request.session.get('visits'):
+		context_dict['visits'] = request.session.get('visits')
+		last_visit_time = request.session.get('last_visit')
+		context_dict['last_visit'] = datetime.strptime(
+			last_visit_time[:-7], '%Y-%m-%d %H:%M:%S')
+	
+	# If session cookies don't exist, set the number of visits to one.
+	# The template will interpret a last_visit of 1 as meaning that 
+	# the user has never visited the site before.
+	else:
+		context_dict['visits'] = 0
+	
+	return render_to_response('rango/about.html', context_dict, context)
 
 def category(request, category_name_url):
 	# Request our context from the request passed to us.
