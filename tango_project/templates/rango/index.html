@@ -26,7 +26,7 @@
 		{% if pages %}
 		<ul>
 			{% for page in pages %}
-			<li><a href="{{ page.url }}">{{ page.title }}</a> - {{ page.category}} ({{ page.views }} view(s))</li>
+			<li><a href="{{ page.url }}">{{ page.title }}</a> - {{ page.category}} ({{ page.views }} view{{ page.views|pluralize }})</li>
 			{% endfor %}
 		</ul>
 		{% else %}
