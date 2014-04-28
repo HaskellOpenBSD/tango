@@ -14,6 +14,7 @@ from rango.forms import CategoryForm
 from rango.forms import PageForm
 from rango.forms import UserForm
 from rango.forms import UserProfileForm
+from rango.bing_search import run_query
 
 def index(request):
 	# Obtain the context from the HTTP request.
@@ -318,3 +319,17 @@ def user_logout(request):
 
 	# Take the user back to the homepage.
 	return HttpResponseRedirect('/rango/')
+
+def search(request):
+	context = RequestContext(request)
+	result_list = []
+
+	if request.method == 'POST':
+		query = request.POST['query'].strip()
+
+		if query:
+			# Run our Bing function to get the results list
+			result_list = run_query(query)
+
+	return render_to_response('rango/search.html', 
+		{'result_list': result_list}, context)
